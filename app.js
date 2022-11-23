@@ -2,7 +2,7 @@ const request = require("request");
 
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const Client = require("ftp");
 const ftpConfig = require("./helper/ftpConfig");
 const ftp = new Client();
