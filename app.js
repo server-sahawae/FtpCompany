@@ -1,4 +1,5 @@
 const express = require("express");
+const fs = require("fs");
 const app = express();
 const port = process.env.PORT || 3000;
 const Client = require("ftp");
@@ -68,14 +69,17 @@ app.get("/image", async (req, res) => {
       ftp.get(`${ftpPath}test-upload.png`, (err, stream) => {
         if (err) throw err;
         console.log("masuk");
-        console.log(stream);
-
-        res.status(200).send(stream);
-        ftp.end();
+        stream.once("close", function () {
+          ftp.end();
+        });
+        stream.pipe(fs.createWriteStream("cobaaaa2.png"));
+        console.log("done");
+        res.status(200).json("ok");
       });
+      console.log("done");
     });
   } catch (error) {
-    console.log(error);
+    console.log("error");
     res.send(error);
   }
 });
