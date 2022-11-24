@@ -104,6 +104,10 @@ app.get("/status", (req, res) => {
     console.log(error);
   }
 });
+
+app.get("/coba", (req, res) => {
+  res.send("coba");
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
