@@ -1,11 +1,8 @@
-const request = require("request");
-const fs = require("fs");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 const Client = require("ftp");
 const ftpConfig = require("./helper/ftpConfig");
-const { deepStrictEqual } = require("assert");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
