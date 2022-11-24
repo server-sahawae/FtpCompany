@@ -1,28 +1,13 @@
-#########################
-#
-# NODE.JS app running in Apache 
-# sample .htaccess  - partialy based on vielhuber/.htaccess
-# Also rules to enforce www. prefix and https: SSL access
-#
-# This file must be on the dir where Apache expects to find the website
-# The Node App can be anywhere else but must be accessible as explained below.
-#
-
-# ModRewrite must be active on Apache
-RewriteEngine On
-
-# First check if domain starts with www. and add it
-# then if not using SSL force it
-RewriteCond %{HTTP_HOST} !^$
-RewriteCond %{HTTP_HOST} !^www\. [NC]
-RewriteCond %{HTTPS}s ^on(s)|
-RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
-RewriteCond %{HTTPS} off
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=302,L,NE]
-
-# Redirect all trafic to NODE.JS server. 
-# It must be running and, in this case, listening to port 60000
-RewriteRule ^$ http://127.0.0.1:60000/ [P,L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ http://127.0.0.1:60000/$1 [P,L]
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/proj9117/testftp"
+PassengerBaseURI "/"
+PassengerNodejs "/home/proj9117/nodevenv/server/testftp/12/bin/node"
+PassengerAppType node
+PassengerStartupFile app.js
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION BEGIN
+<IfModule Litespeed>
+SetEnv TOKEN_KEY sahawae
+SetEnv PORT 3001
+</IfModule>
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION END
