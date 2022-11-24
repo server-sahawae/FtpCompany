@@ -11,8 +11,8 @@ module.exports = class Controller {
     const ftpClient = new ftp.Client(0);
     ftpClient.ftp.verbose = true;
     try {
-      console.log("coba");
       await ftpClient.access(ftpConfig);
+      console.log("coba");
       const result = await ftpClient.list();
       res.status(200).json(result);
     } catch (error) {
@@ -80,13 +80,32 @@ module.exports = class Controller {
     } catch (error) {
       console.log(error);
       res.send(error);
+    } finally {
+      ftpClient.close();
+    }
+  }
+
+  static async deleteFile(req, res, next) {
+    const ftpClient = new ftp.Client(0);
+    ftpClient.ftp.verbose = true;
+    try {
+      const { fileName } = req.params;
+
+      await ftpClient.access(ftpConfig);
+      await ftpClient.remove(
+        path.join(checkFileType(fileName), fileName).replace(/\\/g, "/")
+      );
+      res.status(200).json({ message: `${fileName} has been deleted!` });
+    } catch (error) {
+      res.status(500).json(error);
+    } finally {
+      ftpClient.close();
     }
   }
 
   static async test(req, res, next) {
     try {
-      const data = fs.readFileSync("./coba.jpg", "base64");
-      fs.writeFileSync("jpgbase64.txt", data);
+      res.send("test");
     } catch (error) {}
   }
 };
