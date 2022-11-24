@@ -1,46 +1,38 @@
 const request = require("request");
-
+const fs = require("fs");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 const Client = require("ftp");
 const ftpConfig = require("./helper/ftpConfig");
-const ftp = new Client();
-const ftpPath = "/";
-ftp.connect({
-  host: "srv150.niagahoster.com",
-  port: 21,
-  user: "staisayidsabiq@projectmehvish.com", // defaults to "anonymous"
-  password: "indramayu2703", // defaults to "@anonymous"
-  pasvTimeout: 20000,
-  keepalive: 20000,
-  secureOptions: { rejectUnauthorized: false },
-});
+const { deepStrictEqual } = require("assert");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get("/", async (req, res) => {
   try {
+    const ftp = new Client();
+    const ftpPath = "/";
+
     console.log("start");
+    let data;
+    ftp.connect(ftpConfig);
 
     ftp.on("ready", () => {
       console.log("on");
-      ftp.list(ftpPath, async (error, list) => {
-        try {
-          console.log("list");
-          if (error) throw error;
-          console.dir(list);
-          res.status(200).json(list);
-        } catch (error) {
-          console.log(error);
-          res.send(error);
-        }
+      ftp.list(ftpPath, (error, list) => {
+        if (error) throw error;
+        // list ? console.dir(list) : console.log(error);
+        console.log("zzz");
+        data = list;
+        ftp.end();
+        res.status(200).json(data);
       });
     });
-    // ftp.end();
+    4;
   } catch (error) {
-    res.send(error);
+    return res.status(500).json(error);
   }
 });
 
@@ -69,7 +61,22 @@ app.get("/", async (req, res) => {
 
 app.get("/image", async (req, res) => {
   try {
-    console.log("ftp get");
+    const ftp = new Client();
+    const ftpPath = "/";
+
+    ftp.connect(ftpConfig);
+    ftp.on("ready", () => {
+      console.log("on");
+
+      ftp.get(`${ftpPath}test-upload.png`, (err, stream) => {
+        if (err) throw err;
+        console.log("masuk");
+        console.log(stream);
+
+        res.status(200).send(stream);
+        ftp.end();
+      });
+    });
   } catch (error) {
     console.log(error);
     res.send(error);
@@ -98,6 +105,5 @@ app.get("/status", (req, res) => {
   }
 });
 app.listen(port, () => {
-  console.log(ftp);
   console.log(`Example app listening on port ${port}`);
 });
