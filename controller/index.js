@@ -103,9 +103,45 @@ module.exports = class Controller {
     }
   }
 
-  static async test(req, res, next) {
+  static async newCompany(req, res, next) {
+    const ftpClient = new ftp.Client(0);
+    ftpClient.ftp.verbose = true;
     try {
-      res.send("test");
-    } catch (error) {}
+      // const { name } = req.body;
+      const name = v4uuid();
+      await ftpClient.access(ftpConfig);
+      await ftpClient.send("mkd " + name);
+      await ftpClient.send("mkd " + name + "/image");
+      await ftpClient.send("mkd " + name + "/video");
+      await ftpClient.send("mkd " + name + "/audio");
+      await ftpClient.send("mkd " + name + "/document");
+
+      res.status(200).json({ message: "Directories has been created!" });
+    } catch (error) {
+      console.log(error);
+      res.status(error.code).json(error.message);
+    } finally {
+      ftpClient.close();
+    }
+  }
+
+  static async test(req, res, next) {
+    const ftpClient = new ftp.Client(0);
+    ftpClient.ftp.verbose = true;
+    try {
+      // const { name } = req.body;
+      const name = v4uuid();
+      await ftpClient.access(ftpConfig);
+      // await ftpClient.send("EPSV");
+      await ftpClient.send("pasv");
+      await ftpClient.send("MLSD /");
+      // console.log(data);
+      res.status(200).json("data");
+    } catch (error) {
+      console.log(error);
+      res.status(error.code).json(error.message);
+    } finally {
+      ftpClient.close();
+    }
   }
 };
