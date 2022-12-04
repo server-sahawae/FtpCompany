@@ -1,7 +1,7 @@
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
-PassengerAppRoot "/home/proj9117/public_html/compftp/"
+PassengerAppRoot "/home/proj9117/compftp/"
 PassengerBaseURI "/"
-PassengerNodejs "/home/proj9117/nodevenv/public_html/compftp/12/bin/node"
+PassengerNodejs "/home/proj9117/nodevenv/compftp/12/bin/node"
 PassengerAppType node
 PassengerStartupFile app.js
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
